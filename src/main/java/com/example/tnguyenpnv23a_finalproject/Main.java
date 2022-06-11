@@ -46,25 +46,25 @@ public class Main extends Application {
         var tfImage = new TextField();
         grid.add(tfImage, 1, 1);
         //
-        grid.add(new Label("Type:"), 1, 0);
+        grid.add(new Label("Type:"), 2, 0);
         var tfType = new TextField();
-        grid.add(tfType, 1, 1);
+        grid.add(tfType, 2, 1);
         //
-        grid.add(new Label("Author:"), 1, 0);
+        grid.add(new Label("Author:"), 3, 0);
         var tfAuthor = new TextField();
-        grid.add(tfAuthor, 1, 1);
+        grid.add(tfAuthor, 3, 1);
         //
-        grid.add(new Label("Price:"), 2, 0);
+        grid.add(new Label("Price:"), 4, 0);
         var tfPrice = new TextField();
-        grid.add(tfPrice, 2, 1);
+        grid.add(tfPrice, 4, 1);
         //
-        grid.add(new Label("Quantity:"), 2, 0);
+        grid.add(new Label("Quantity:"), 5, 0);
         var tfQuantity = new TextField();
-        grid.add(tfQuantity, 2, 1);
+        grid.add(tfQuantity, 5, 1);
         //
-        grid.add(new Label("Description:"),3,  0);
+        grid.add(new Label("Description:"),6,  0);
         var tfDescription = new TextField();
-        grid.add(tfDescription, 3, 1);
+        grid.add(tfDescription, 6, 1);
         //
 
         // add

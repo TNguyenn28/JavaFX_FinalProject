@@ -41,7 +41,7 @@ public class DBConnection {
     }
     public ArrayList<Book> getBooks(){
         ArrayList<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM painting";
+        String sql = "SELECT * FROM book";
         try {
             ResultSet results = connection.prepareStatement(sql).executeQuery();
             while (results.next()){
@@ -66,7 +66,7 @@ public class DBConnection {
         return list;
     }
     public void insertBook(Book book){
-        String sql = "INSERT INTO painting (name, image, type, author, price, quantity, description) VALUE ('"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"')";
+        String sql = "INSERT INTO book (name, image, type, author, price, quantity, description) VALUE ('"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"')";
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {
@@ -75,7 +75,7 @@ public class DBConnection {
     }
 
     public void updateBook(Book book){
-        String sql = "UPDATE painting SET name = '"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"' WHERE id = "+ book.id;
+        String sql = "UPDATE book SET name = '"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"' WHERE id = "+ book.id;
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class DBConnection {
     }
 
     public void deleteBook(int id){
-        String sql = "DELETE FROM painting WHERE id = "+ id;
+        String sql = "DELETE FROM book WHERE id = "+ id;
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {

@@ -12,19 +12,13 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.stage.StageStyle;
-import java.sql.*;
 
 public class Main extends Application {
-
     private Scene scene;
     private static final String EMPTY = "";
     public static void main(String[] args) {
         launch(args);
     }
-
     @Override
     public void start(Stage stage) {
         GridPane grid = new GridPane();
@@ -33,11 +27,6 @@ public class Main extends Application {
         grid.setHgap(10);
         DBConnection DB = new DBConnection();
         ArrayList<Book> bookList = DB.getBooks();
-//        DB.insertStudent(new Student("hue",9));
-//        DB.updateStudent(new Student(1,"tu",10));
-//        DB.deleteStudent(1);
-//        DB.getStudents();
-
         grid.add(new Label("Name:"), 0, 0);
         var tfName = new TextField();
         grid.add(tfName, 0, 1);
@@ -92,7 +81,7 @@ public class Main extends Application {
             alert.setContentText("Please fill all blank!");
             alert.showAndWait();
         });
-        grid.add(btnAdd, 4, 1);
+        grid.add(btnAdd, 7, 1);
 
         //show
         for(int i = 0; i < bookList.size(); i++){
@@ -105,8 +94,11 @@ public class Main extends Application {
 
             grid.add(new Label (bookList.get(i).getName()), 0, i+2);
             grid.add(imageView, 1, i+2);
-            grid.add(new Label ("$"+String.valueOf(bookList.get(i).getPrice())), 2, i+2);
-            grid.add(new Label (bookList.get(i).getDescription()), 3, i+2);
+            grid.add(new Label (bookList.get(i).getType()), 2, i+2);
+            grid.add(new Label (bookList.get(i).getAuthor()), 3, i+2);
+            grid.add(new Label ("$"+ bookList.get(i).getPrice()), 4, i+2);
+            grid.add(new Label ("" +bookList.get(i).getQuantity()), 5, i+2);
+            grid.add(new Label (bookList.get(i).getDescription()), 6, i+2);
 
             // Update
             var btnUpdate = new Button("Update");
@@ -120,19 +112,19 @@ public class Main extends Application {
                 TextField tfimage = (TextField) grid.getChildren().get(3);
                 tfimage.setText("" + bookList.get(id1).getImage());
 //
-                TextField tftype = (TextField) grid.getChildren().get(3);
-                tftype.setText("" + bookList.get(id1).getImage());
+                TextField tftype = (TextField) grid.getChildren().get(5);
+                tftype.setText("" + bookList.get(id1).getType());
 //
-                TextField tfauthor = (TextField) grid.getChildren().get(3);
-                tfauthor.setText("" + bookList.get(id1).getImage());
+                TextField tfauthor = (TextField) grid.getChildren().get(7);
+                tfauthor.setText("" + bookList.get(id1).getAuthor());
 //
-                TextField tfprice = (TextField) grid.getChildren().get(5);
+                TextField tfprice = (TextField) grid.getChildren().get(9);
                 tfprice.setText("" + bookList.get(id1).getPrice());
 //
-                TextField tfquantity = (TextField) grid.getChildren().get(5);
-                tfquantity.setText("" + bookList.get(id1).getPrice());
+                TextField tfquantity = (TextField) grid.getChildren().get(11);
+                tfquantity.setText("" + bookList.get(id1).getQuantity());
 //
-                TextField tfdescription = (TextField) grid.getChildren().get(7);
+                TextField tfdescription = (TextField) grid.getChildren().get(13);
                 tfdescription.setText("" + bookList.get(id1).getDescription());
                 var newbtnAdd = new Button("Update");
                 newbtnAdd.setPadding(new Insets(5, 15, 5, 15));
@@ -140,13 +132,13 @@ public class Main extends Application {
                     Integer Newid = bookList.get(id1).id;
                     String Newname = tfname.getText();
                     String Newimage = tfimage.getText();
-                    String Newytype = tfimage.getText();
-                    String Newauthor = tfimage.getText();
+                    String Newtype = tftype.getText();
+                    String Newauthor = tfauthor.getText();
                     Integer Newprice = Integer.valueOf(tfprice.getText());
-                    Integer Newquantity = Integer.valueOf(tfprice.getText());
+                    Integer Newquantity = Integer.valueOf(tfquantity.getText());
                     String Newdescription = tfdescription.getText();
                     if (!Newname.equals(EMPTY) && !Newimage.equals(EMPTY) && !Newprice.equals(EMPTY) && !Newdescription.equals(EMPTY)) {
-                        DB.updateBook(new Book(Newid, Newname, Newimage, Newytype, Newauthor, Newprice, Newquantity,  Newdescription));
+                        DB.updateBook(new Book(Newid, Newname, Newimage, Newtype, Newauthor, Newprice, Newquantity,  Newdescription));
                         try {
                             start(stage);
                         } catch (Exception ex) {
@@ -159,9 +151,9 @@ public class Main extends Application {
                     alert.setContentText("Please fill all blank!");
                     alert.showAndWait();
                 });
-                grid.add(newbtnAdd, 4, 1);
+                grid.add(newbtnAdd, 7, 1);
             });
-            grid.add(btnUpdate, 4, i+2);
+            grid.add(btnUpdate, 7, i+2);
 
             // Delete
             var btnDelete = new Button("Delete");
@@ -179,7 +171,7 @@ public class Main extends Application {
                     throw new RuntimeException(ex);
                 }
             });
-            grid.add(btnDelete, 5, i+2);
+            grid.add(btnDelete, 8, i+2);
         }
 
         scene = new Scene(grid, 1500, 1000);

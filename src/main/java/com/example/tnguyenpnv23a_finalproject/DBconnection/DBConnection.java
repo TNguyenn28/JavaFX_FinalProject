@@ -45,9 +45,6 @@ public class DBConnection {
         try {
             ResultSet results = connection.prepareStatement(sql).executeQuery();
             while (results.next()){
-//                System.out.println(results.getInt("id"));
-//                System.out.println(results.getString("name"));
-//                System.out.println(results.getFloat("score"));
                 Book book = new Book(
                         results.getInt("id"),
                         results.getString("name"),
@@ -67,6 +64,7 @@ public class DBConnection {
     }
     public void insertBook(Book book){
         String sql = "INSERT INTO book (name, image, type, author, price, quantity, description) VALUE ('"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"')";
+        System.out.println(sql);
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {
@@ -75,7 +73,8 @@ public class DBConnection {
     }
 
     public void updateBook(Book book){
-        String sql = "UPDATE book SET name = '"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"' WHERE id = "+ book.id;
+        String sql = "UPDATE book SET name = '"+book.name+"',image = '"+book.image+"', type = '"+book.type+"', author = '"+book.author+"',price = '"+book.price+"', quantity ='"+book.quantity+"', description = '"+book.description+"' WHERE id = "+ book.id;
+        System.out.println(sql);
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {

@@ -1,24 +1,7 @@
 package com.example.tnguyenpnv23a_finalproject.DBconnection;
-//import java.sql.*;
-//
-//public class DbConnection {
-//  public Connection con;
-//
-//    public static final String URL = "jdbc:mysql://localhost/pnvstudent";
-//    public static final String USERNAME = "" ;
-//    public static final String PASSWORD = "";
-//
-//    public DbConnection() {
-//        try {
-//            con = DriverManager.getConnection(URL,USERNAME, PASSWORD);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//
-//}
+
 import com.example.tnguyenpnv23a_finalproject.models.Book;
+import com.example.tnguyenpnv23a_finalproject.models.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -41,15 +24,15 @@ public class DBConnection {
     }
     public ArrayList<Book> getBooks(){
         ArrayList<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM book";
+        String sql = "SELECT b.idBook, b.idCategory, b.name, b.image, b.author, b.price, b.quantity, b.description, c.name FROM book as b  LEFT JOIN category as c ON b.idCategory = c.idCategory ORDER BY b.idBook ASC";
         try {
             ResultSet results = connection.prepareStatement(sql).executeQuery();
             while (results.next()){
                 Book book = new Book(
-                        results.getInt("id"),
+                        results.getInt("idBook"),
                         results.getString("name"),
                         results.getString("image"),
-                        results.getString("type"),
+                        new Category(results.getInt("idCategory"), results.getString("name")),
                         results.getString("author"),
                         results.getInt("price"),
                         results.getInt("quantity"),
@@ -62,8 +45,26 @@ public class DBConnection {
         }
         return list;
     }
+
+    public ArrayList<Category> getListCategory () {
+        ArrayList<Category> listCategory = new ArrayList<>();
+        String sql = "SELECT * FROM category";
+        try {
+            ResultSet result = connection.prepareStatement(sql).executeQuery();
+            while (result.next()){
+                Category category = new Category(
+                        result.getInt("idCategory"),
+                        result.getString("name")
+                );
+                listCategory.add(category);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listCategory;
+    }
     public void insertBook(Book book){
-        String sql = "INSERT INTO book (name, image, type, author, price, quantity, description) VALUE ('"+book.name+"','"+book.image+"','"+book.type+"','"+book.author+"','"+book.price+"','"+book.quantity+"','"+book.description+"')";
+        String sql = "INSERT INTO book (name, image, idCategory, author, price, quantity, description) VALUE ('"+ book.getName() +"','"+ book.getImage() +"','"+book.getCategoryName().getId()+"','"+ book.getAuthor() +"','"+ book.getPrice() +"','"+ book.getQuantity() +"','"+ book.getDescription() +"')";
         System.out.println(sql);
         try {
             connection.prepareStatement(sql).executeUpdate();
@@ -72,8 +73,8 @@ public class DBConnection {
         }
     }
 
-    public void updateBook(Book book){
-        String sql = "UPDATE book SET name = '"+book.name+"',image = '"+book.image+"', type = '"+book.type+"', author = '"+book.author+"',price = '"+book.price+"', quantity ='"+book.quantity+"', description = '"+book.description+"' WHERE id = "+ book.id;
+    public void updateBook(int id, Book book){
+        String sql = "UPDATE book SET name = '"+ book.getName() +"',image = '"+ book.getImage() +"', idCategory = '"+book.getCategoryName().getId()+"', author = '"+ book.getAuthor() +"',price = '"+ book.getPrice() +"', quantity ='"+ book.getQuantity() +"', description = '"+ book.getDescription() +"' WHERE id = "+ id;
         System.out.println(sql);
         try {
             connection.prepareStatement(sql).executeUpdate();

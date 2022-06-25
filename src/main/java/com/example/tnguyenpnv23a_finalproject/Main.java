@@ -2,6 +2,7 @@ package com.example.tnguyenpnv23a_finalproject;
 
 import com.example.tnguyenpnv23a_finalproject.DBconnection.DBConnection;
 import com.example.tnguyenpnv23a_finalproject.models.Book;
+import com.example.tnguyenpnv23a_finalproject.models.Category;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,9 +36,14 @@ public class Main extends Application {
         var tfImage = new TextField();
         grid.add(tfImage, 1, 1);
         //
-        grid.add(new Label("Type:"), 2, 0);
-        var tfType = new TextField();
-        grid.add(tfType, 2, 1);
+        ChoiceBox choiceCategory = new ChoiceBox();
+        ArrayList<Category> listCategories = DB.getListCategory();
+        for (var category : listCategories){
+            choiceCategory.getItems().add(category.getName());
+        }
+        //
+        grid.add(new Label("Category:"), 2, 0);
+        grid.add(choiceCategory, 2, 1);
         //
         grid.add(new Label("Author:"), 3, 0);
         var tfAuthor = new TextField();
@@ -56,19 +62,20 @@ public class Main extends Application {
         grid.add(tfDescription, 6, 1);
         //
 
+
         // add
         var btnAdd = new Button("Add");
         btnAdd.setPadding(new Insets(5, 15, 5, 15));
         btnAdd.setOnAction(e -> {
             String name = tfName.getText();
             String image = tfImage.getText();
-            String type = tfType.getText();
+            int idCategory = choiceCategory.getSelectionModel().getSelectedIndex()+1;
             String author = tfAuthor.getText();
             Integer price = Integer.valueOf(tfPrice.getText());
             Integer quantity = Integer.valueOf(tfQuantity.getText());
             String description = tfDescription.getText();
             if (!name.equals(EMPTY) && !image.equals(EMPTY) && !price.equals(EMPTY) && !description.equals(EMPTY)) {
-                DB.insertBook(new Book(name, image, type, author, price, quantity, description));
+                DB.insertBook(new Book(name, image, new Category(idCategory), author, price, quantity, description));
                 try {
                     start(stage);
                 } catch (Exception ex) {
@@ -85,7 +92,6 @@ public class Main extends Application {
 
         //show
         for(int i = 0; i < bookList.size(); i++){
-
             Image image = new Image(bookList.get(i).getImage());
             ImageView imageView = new ImageView();
             imageView.setImage(image);
@@ -94,7 +100,7 @@ public class Main extends Application {
 
             grid.add(new Label (bookList.get(i).getName()), 0, i+2);
             grid.add(imageView, 1, i+2);
-            grid.add(new Label (bookList.get(i).getType()), 2, i+2);
+            grid.add(new Label (bookList.get(i).getCategoryName().getName()), 2, i+2);
             grid.add(new Label (bookList.get(i).getAuthor()), 3, i+2);
             grid.add(new Label ("$"+ bookList.get(i).getPrice()), 4, i+2);
             grid.add(new Label ("" +bookList.get(i).getQuantity()), 5, i+2);
@@ -112,9 +118,6 @@ public class Main extends Application {
                 TextField tfimage = (TextField) grid.getChildren().get(3);
                 tfimage.setText("" + bookList.get(id1).getImage());
 //
-                TextField tftype = (TextField) grid.getChildren().get(5);
-                tftype.setText("" + bookList.get(id1).getType());
-//
                 TextField tfauthor = (TextField) grid.getChildren().get(7);
                 tfauthor.setText("" + bookList.get(id1).getAuthor());
 //
@@ -129,16 +132,16 @@ public class Main extends Application {
                 var newbtnAdd = new Button("Update");
                 newbtnAdd.setPadding(new Insets(5, 15, 5, 15));
                 newbtnAdd.setOnAction(newe -> {
-                    Integer Newid = bookList.get(id1).id;
+                    Integer Newid = bookList.get(id1).getId();
                     String Newname = tfname.getText();
                     String Newimage = tfimage.getText();
-                    String Newtype = tftype.getText();
+                    int idCategory = choiceCategory.getSelectionModel().getSelectedIndex()+1;
                     String Newauthor = tfauthor.getText();
                     Integer Newprice = Integer.valueOf(tfprice.getText());
                     Integer Newquantity = Integer.valueOf(tfquantity.getText());
                     String Newdescription = tfdescription.getText();
                     if (!Newname.equals(EMPTY) && !Newimage.equals(EMPTY) && !Newprice.equals(EMPTY) && !Newdescription.equals(EMPTY)) {
-                        DB.updateBook(new Book(Newid, Newname, Newimage, Newtype, Newauthor, Newprice, Newquantity,  Newdescription));
+                        DB.updateBook(Newid ,new Book( Newname, Newimage, new Category(idCategory), Newauthor, Newprice, Newquantity,  Newdescription));
                         try {
                             start(stage);
                         } catch (Exception ex) {
@@ -157,7 +160,7 @@ public class Main extends Application {
 
             // Delete
             var btnDelete = new Button("Delete");
-            btnDelete.setId(String.valueOf(bookList.get(i).id));
+            btnDelete.setId(String.valueOf(bookList.get(i).getId()));
             btnDelete.setOnAction(e -> {
                 int id3 = Integer.parseInt(btnDelete.getId());
                 DB.deleteBook(id3);
@@ -174,7 +177,7 @@ public class Main extends Application {
             grid.add(btnDelete, 8, i+2);
         }
 
-        scene = new Scene(grid, 1500, 1000);
+        scene = new Scene(grid, 1500, 800);
         stage.setTitle("Book");
         stage.setScene(scene);
         stage.show();

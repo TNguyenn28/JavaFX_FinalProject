@@ -5,10 +5,9 @@ import com.example.tnguyenpnv23a_finalproject.models.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DBConnection {
-    private Connection connection;
+    private final Connection connection;
 
     public static final String URL = "jdbc:mysql://localhost/bookmanagement";
     public static final String USERNAME = "root";
@@ -24,24 +23,25 @@ public class DBConnection {
     }
     public ArrayList<Book> getBooks(){
         ArrayList<Book> list = new ArrayList<>();
-        String sql = "SELECT b.idBook, b.idCategory, b.name, b.image, b.author, b.price, b.quantity, b.description, c.name FROM book as b  LEFT JOIN category as c ON b.idCategory = c.idCategory ORDER BY b.idBook ASC";
+        String sql = "SELECT b.idBook, b.idCategory, b.name as bookName, b.image, b.author, b.price, b.quantity, b.description, c.name as categoryName FROM book as b LEFT JOIN category as c ON b.idCategory = c.idCategory ORDER BY b.idBook ASC";
         try {
             ResultSet results = connection.prepareStatement(sql).executeQuery();
             while (results.next()){
                 Book book = new Book(
                         results.getInt("idBook"),
-                        results.getString("name"),
+                        results.getString("bookName"),
                         results.getString("image"),
-                        new Category(results.getInt("idCategory"), results.getString("name")),
+                        new Category(results.getInt("idCategory"), results.getString("categoryName")),
                         results.getString("author"),
                         results.getInt("price"),
                         results.getInt("quantity"),
                         results.getString("description")
                 );
+                System.out.println(book);
                 list.add(book);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -74,7 +74,7 @@ public class DBConnection {
     }
 
     public void updateBook(int id, Book book){
-        String sql = "UPDATE book SET name = '"+ book.getName() +"',image = '"+ book.getImage() +"', idCategory = '"+book.getCategoryName().getId()+"', author = '"+ book.getAuthor() +"',price = '"+ book.getPrice() +"', quantity ='"+ book.getQuantity() +"', description = '"+ book.getDescription() +"' WHERE id = "+ id;
+        String sql = "UPDATE book SET name = '"+ book.getName() +"',image = '"+ book.getImage() +"', idCategory = "+book.getCategoryName().getId()+", author = '"+ book.getAuthor() +"',price = "+ book.getPrice() +", quantity ="+ book.getQuantity() +", description = '"+ book.getDescription() +"' WHERE idBook = "+ id;
         System.out.println(sql);
         try {
             connection.prepareStatement(sql).executeUpdate();
@@ -84,7 +84,7 @@ public class DBConnection {
     }
 
     public void deleteBook(int id){
-        String sql = "DELETE FROM book WHERE id = "+ id;
+        String sql = "DELETE FROM book WHERE idBook = "+ id;
         try {
             connection.prepareStatement(sql).executeUpdate();
         } catch (SQLException e) {

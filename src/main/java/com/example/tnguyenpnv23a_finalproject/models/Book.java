@@ -1,7 +1,6 @@
 package com.example.tnguyenpnv23a_finalproject.models;
 
 public class Book {
-    public String type;
     private int id;
     private String name;
     private String image;
@@ -96,6 +95,7 @@ public class Book {
         this.quantity = quantity;
     }
     public String getDescription() {
+
         return description;
     }
 

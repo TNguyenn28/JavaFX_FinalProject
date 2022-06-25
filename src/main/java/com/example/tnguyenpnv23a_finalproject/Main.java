@@ -112,11 +112,14 @@ public class Main extends Application {
             btnUpdate.setOnAction(e -> {
                 btnAdd.setVisible(false);
                 int id1 = Integer.parseInt(btnUpdate.getId());
+                System.out.println(id1);
                 TextField tfname = (TextField) grid.getChildren().get(1);
                 tfname.setText("" + bookList.get(id1).getName());
 //
                 TextField tfimage = (TextField) grid.getChildren().get(3);
                 tfimage.setText("" + bookList.get(id1).getImage());
+
+                choiceCategory.setValue(bookList.get(id1).getCategoryName().getName());
 //
                 TextField tfauthor = (TextField) grid.getChildren().get(7);
                 tfauthor.setText("" + bookList.get(id1).getAuthor());
@@ -132,7 +135,8 @@ public class Main extends Application {
                 var newbtnAdd = new Button("Update");
                 newbtnAdd.setPadding(new Insets(5, 15, 5, 15));
                 newbtnAdd.setOnAction(newe -> {
-                    Integer Newid = bookList.get(id1).getId();
+                    int Newid = bookList.get(id1).getId();
+                    System.out.println(Newid);
                     String Newname = tfname.getText();
                     String Newimage = tfimage.getText();
                     int idCategory = choiceCategory.getSelectionModel().getSelectedIndex()+1;

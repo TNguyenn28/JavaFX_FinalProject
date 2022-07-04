@@ -1,5 +1,6 @@
 package com.example.tnguyenpnv23a_finalproject.DBconnection;
 
+import com.example.tnguyenpnv23a_finalproject.models.Admin;
 import com.example.tnguyenpnv23a_finalproject.models.Book;
 import com.example.tnguyenpnv23a_finalproject.models.Category;
 
@@ -63,6 +64,28 @@ public class DBConnection {
         }
         return listCategory;
     }
+
+    public Book getBookUpdate (int id) {
+        String sql = "SELECT b.idBook, b.idCategory, b.name as bookName, b.image, b.author, b.price, b.quantity, b.description, c.name as categoryName FROM book as b LEFT JOIN category as c ON b.idCategory = c.idCategory WHERE idBook = " + id;
+        Book book = null;
+        try {
+            ResultSet result = connection.prepareStatement(sql).executeQuery();
+            while (result.next()) {
+                book = new Book(
+                        result.getString("bookName"),
+                        result.getString("image"),
+                        new Category(result.getInt("idCategory"), result.getString("categoryName")),
+                        result.getString("author"),
+                        result.getInt("price"),
+                        result.getInt("quantity"),
+                        result.getString("description"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(book.getCategoryName().getName());
+        return book;
+    }
     public void insertBook(Book book){
         String sql = "INSERT INTO book (name, image, idCategory, author, price, quantity, description) VALUE ('"+ book.getName() +"','"+ book.getImage() +"','"+book.getCategoryName().getId()+"','"+ book.getAuthor() +"','"+ book.getPrice() +"','"+ book.getQuantity() +"','"+ book.getDescription() +"')";
         System.out.println(sql);
@@ -90,5 +113,21 @@ public class DBConnection {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ArrayList<Admin> getAdmin() {
+        ArrayList<Admin> admins = new ArrayList<>();
+        try {
+            var result = this.connection.prepareStatement("Select * from admin").executeQuery();
+            while (result.next()) {
+                int id = result.getInt("id");
+                String name = result.getString("userName");
+                String password = result.getString("password");
+                admins.add(new Admin(id, name, password));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return admins;
     }
 }

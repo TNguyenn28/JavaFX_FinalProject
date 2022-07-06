@@ -38,7 +38,7 @@ public class DBConnection {
                         results.getInt("quantity"),
                         results.getString("description")
                 );
-                System.out.println(book);
+
                 list.add(book);
             }
         } catch (SQLException e) {
@@ -65,27 +65,27 @@ public class DBConnection {
         return listCategory;
     }
 
-    public Book getBookUpdate (int id) {
-        String sql = "SELECT b.idBook, b.idCategory, b.name as bookName, b.image, b.author, b.price, b.quantity, b.description, c.name as categoryName FROM book as b LEFT JOIN category as c ON b.idCategory = c.idCategory WHERE idBook = " + id;
-        Book book = null;
-        try {
-            ResultSet result = connection.prepareStatement(sql).executeQuery();
-            while (result.next()) {
-                book = new Book(
-                        result.getString("bookName"),
-                        result.getString("image"),
-                        new Category(result.getInt("idCategory"), result.getString("categoryName")),
-                        result.getString("author"),
-                        result.getInt("price"),
-                        result.getInt("quantity"),
-                        result.getString("description"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(book.getCategoryName().getName());
-        return book;
-    }
+//    public Book getBookUpdate (int id) {
+//        String sql = "SELECT b.idBook, b.idCategory, b.name as bookName, b.image, b.author, b.price, b.quantity, b.description, c.name as categoryName FROM book as b LEFT JOIN category as c ON b.idCategory = c.idCategory WHERE idBook = " + id;
+//        Book book = null;
+//        try {
+//            ResultSet result = connection.prepareStatement(sql).executeQuery();
+//            while (result.next()) {
+//                book = new Book(
+//                        result.getString("bookName"),
+//                        result.getString("image"),
+//                        new Category(result.getInt("idCategory"), result.getString("categoryName")),
+//                        result.getString("author"),
+//                        result.getInt("price"),
+//                        result.getInt("quantity"),
+//                        result.getString("description"));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.out.println(book.getCategoryName().getName());
+//        return book;
+//    }
     public void insertBook(Book book){
         String sql = "INSERT INTO book (name, image, idCategory, author, price, quantity, description) VALUE ('"+ book.getName() +"','"+ book.getImage() +"','"+book.getCategoryName().getId()+"','"+ book.getAuthor() +"','"+ book.getPrice() +"','"+ book.getQuantity() +"','"+ book.getDescription() +"')";
         System.out.println(sql);
@@ -129,5 +129,15 @@ public class DBConnection {
             throw new RuntimeException(e);
         }
         return admins;
+    }
+
+    public void registerAdmin (Admin admin) {
+        String sql = "INSERT INTO admin (userName, password) VALUES ('" + admin.getName() + "','" + admin.getPassword() + "')";
+        System.out.println(sql);
+        try {
+            connection.prepareStatement(sql).executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -88,7 +88,7 @@ public class Main extends Application {
 //        loginScreen.setFill(Color.web("#C6E2FF"));
 
         window.setTitle("Book");
-        window.setScene(homepage);
+        window.setScene(loginScreen);
         window.show();
     }
     public void displayHomePage (VBox vBox ) {
@@ -118,8 +118,8 @@ public class Main extends Application {
             Image image = new Image(bookList.get(i).getImage());
             ImageView imageView = new ImageView();
             imageView.setImage(image);
-            imageView.setFitWidth(130);
-            imageView.setFitHeight(140);
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(150);
 
             grid.add(new Label("" + (i + 1)), 0, i + 2);
             grid.add(new Label(bookList.get(i).getName()), 1, i + 2);
@@ -297,6 +297,13 @@ public class Main extends Application {
                             Integer quantity = Integer.valueOf(tfQuantity.getText());
                             String description = tfDescription.getText();
                             DB.insertBook(new Book(name, image, new Category(idCategory), author, price, quantity, description));
+                            tfName.setText("");
+                            choiceCategory.setValue("");
+                            tfAuthor.setText("");
+                            tfDescription.setText("");
+                            tfImage.setText("");
+                            tfPrice.setText("");
+                            tfQuantity.setText("");
                             displayHomePage(bookVBox);
                             window.setScene(homepage);
                         }else {
@@ -449,6 +456,7 @@ public class Main extends Application {
                         alert.setContentText("Please Login");
                         alert.showAndWait().ifPresent(response -> {
                             if (response == ButtonType.OK) {
+                                showLoginPage(formLogin);
                                 window.setScene(loginScreen);
                             }
                         });
